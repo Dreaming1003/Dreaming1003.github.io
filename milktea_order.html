@@ -1,0 +1,368 @@
+程序源代码
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>助推控糖试验程序</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+        header {
+            background-color: #333;
+            color: #fff;
+            text-align: center;
+            padding: 20px 0;
+        }
+        h1 {
+            margin: 0;
+        }
+        .menu-item {
+            background-color: #fff;
+            margin: 10px;
+            padding: 10px;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            display: flex;
+            align-items: center;
+        }
+        .menu-item h2 {
+            margin-top: 0;
+        }
+        .menu-item p {
+            margin-bottom: 0;
+        }
+        .menu-item img {
+            width: 100px;
+            height: 100px;
+            margin-right: 10px;
+            border-radius: 5px;
+        }
+        .select-button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-left: auto;
+        }
+        .overlay {
+            position: fixed;
+            display: none;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            background-color: rgba(0,0,0,0.5);
+            z-index: 3;
+        }
+        .submenu {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 75%;
+            background-color: #fff;
+            border-top-left-radius: 10px;
+            border-top-right-radius: 10px;
+            padding: 20px;
+            box-sizing: border-box;
+            display: none;
+            z-index: 4;
+        }
+        .submenu img {
+            max-width: 100%;
+            height: auto;
+            margin-bottom: 5px;
+        }
+        .submenu-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 10px;
+        }
+        .submenu-info img {
+            width: 150px;
+            height: 150px;
+            margin-right: 10px;
+        }
+        #submenu-image-right {
+            width: 250px;
+            height: 80px;
+        }
+        .submenu-title {
+            margin-top: 0;
+            margin-bottom: 0;
+            text-align: center;
+        }
+        .close {
+            color: #aaa;
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        .sugar-label {
+            position: relative;
+            top: -5px;
+            left: 5px;
+            font-size: 16px;
+            color: #333;
+            z-index: 999;
+            margin-top: 10px;
+        }
+        .sugar-label-text {
+            position: relative;
+            top: 0;
+            left: 0;
+            font-size: 14px;
+            color: #333;
+            z-index: 999;
+        }
+        .sugar-buttons {
+            margin-top: auto;
+            display: flex;
+            justify-content: space-between;
+        }
+        .sugar-button {
+            background-color: #ccc;
+            color: white;
+            padding: 10px 10px;
+            text-align: center;
+            text-decoration: none;
+            display: flex;
+            flex-direction: row;
+            justify-content: center;
+            align-items: center;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 1px;
+            flex-grow: 1;
+            font-size: 14px; /* 设置按钮文字的初始字号 */
+            white-space: nowrap; /* 禁止文字换行 */
+        }
+        .sugar-button.selected {
+            background-color: #4CAF50;
+        }
+        .confirm-button {
+            position: fixed;
+            bottom: 5px; /* 底部外边距 */
+            left: 10px; /* 左侧外边距 */
+            right: 10px; /* 右侧外边距 */
+            background-color: #4CAF50;
+            color: white;
+            padding: 15px 0; /* 垂直内边距 */
+            text-align: center;
+            border: none;
+            border-radius: 5px; /* 可以根据需要添加边框圆角 */
+            cursor: pointer;
+        }
+        .cup-button {
+            background-color: #ccc;
+            color: white;
+            padding: 10px 10px;
+            text-align: center;
+            text-decoration: none;
+            display: flex;
+            flex-direction: row;
+            justify-content: center;
+            align-items: center;
+            font-size: 16px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 1px;
+            flex-grow: 1;
+        }
+        .cup-button.selected {
+            background-color: #4CAF50;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>助推控糖点单试验程序</h1>
+    </header>
+    <div class="menu-item">
+        <img src="四季奶青.jpg" alt="四季奶青">
+        <div>
+            <h2>四季奶青</h2>
+            <p>价格：￥12</p>
+            <p>口味：喝一口回味无穷</p>
+        </div>
+        <button class="select-button" onclick="openSubmenu('四季奶青.jpg', '四季奶青')">选择</button>
+    </div>
+    <div class="menu-item">
+        <img src="乌龙奶茶.jpg" alt="乌龙奶茶">
+        <div>
+            <h2>乌龙奶茶</h2>
+            <p>价格：￥12</p>
+            <p>口味：浓郁乌龙奶香</p>
+        </div>
+        <button class="select-button" onclick="openSubmenu('乌龙奶茶.jpg', '乌龙奶茶')">选择</button>
+    </div>
+    <div class="menu-item">
+        <img src="清香乌龙茶.jpg" alt="清香乌龙茶">
+        <div>
+            <h2>清香乌龙茶</h2>
+            <p>价格：￥10</p>
+            <p>口味：味醇甘润</p>
+        </div>
+        <button class="select-button" onclick="openSubmenu('清香乌龙茶.jpg', '清香乌龙茶')">选择</button>
+    </div>
+    <div class="menu-item">
+        <img src="珍珠奶茶.jpg" alt="珍珠奶茶">
+        <div>
+            <h2>珍珠奶茶</h2>
+            <p>价格：￥12</p>
+            <p>口味：口感香醇有嚼劲</p>
+        </div>
+        <button class="select-button" onclick="openSubmenu('珍珠奶茶.jpg', '珍珠奶茶')">选择</button>
+    </div>
+    <!-- 二级菜单 -->
+    <div class="overlay" id="overlay" onclick="closeSubmenu()"></div>
+    <div class="submenu" id="submenu">
+        <span class="close" onclick="closeSubmenu()">&times;</span>
+        <div class="submenu-info">
+            <img id="submenu-image-left" src="" alt="">
+            <div>
+                <h2 id="submenu-title"></h2>
+                <img id="submenu-image-right" src="五分糖.jpg" alt="">
+            </div>
+        </div>
+        <!-- 添加杯型按钮 -->
+        <div class="sugar-label">杯型</div>
+        <div class="sugar-buttons">
+            <button class="sugar-button cup-button" onclick="selectCup('大杯')">大杯</button>
+            <button class="sugar-button cup-button" onclick="selectCup('中杯')">中杯</button>
+        </div>
+        <div class="sugar-label">糖度</div>
+      <div class="sugar-buttons">
+        <button class="sugar-button" onclick="selectSugar('不另外加糖.jpg', '不另外加糖')">不另外加糖</button>
+        <button class="sugar-button" onclick="selectSugar('三分糖.jpg', '三分糖')">三分糖</button>
+        <button class="sugar-button" onclick="selectSugar('五分糖.jpg', '五分糖')">五分糖</button>
+        <button class="sugar-button" onclick="selectSugar('七分糖.jpg', '七分糖')">七分糖</button>
+        <button class="sugar-button" onclick="selectSugar('标准糖.jpg', '标准糖')">标准糖</button>
+        </div>
+        <div class="sugar-label">冰度</div>
+        <div class="sugar-buttons">
+            <button class="sugar-button ice-button" onclick="selectIce('标准冰')">标准冰</button>
+            <button class="sugar-button ice-button" onclick="selectIce('少冰')">少冰</button>
+            <button class="sugar-button ice-button" onclick="selectIce('去冰')">去冰</button>
+            <button class="sugar-button ice-button" onclick="selectIce('常温')">常温</button>
+        </div>
+        <!-- 添加确认按钮 -->
+        <button class="select-button confirm-button" onclick="confirmOrder()">确认</button>
+    </div>
+    
+
+    <script>
+        // JavaScript 代码
+        var sugarChoice = ""; // 用于存储用户对糖度的选择
+        var iceChoice = ""; // 用于存储用户对冰度的选择
+        var cupChoice = ""; // 用于存储用户对杯型的选择
+
+        // 提取奶茶名字做变量
+        var drinkNames = [];
+        var menuItems = document.querySelectorAll('.menu-item');
+        menuItems.forEach(function(item) {
+            var name = item.querySelector('h2').textContent;
+            drinkNames.push(name);
+        });
+
+        function openSubmenu(imageSrc, title) {
+            // 显示二级菜单
+            document.getElementById('overlay').style.display = 'block';
+            document.getElementById('submenu').style.display = 'block';
+            // 设置二级菜单的图片和标题
+            document.getElementById('submenu-image-left').src = imageSrc;
+            document.getElementById('submenu-title').textContent = title;
+            document.getElementById('submenu-image-right').src = "五分糖.jpg"; 
+        }
+
+        function closeSubmenu() {
+            // 关闭二级菜单
+            document.getElementById('overlay').style.display = 'none';
+            document.getElementById('submenu').style.display = 'none';
+        }
+
+        function selectSugar(imageSrc, sugar) {
+            // 设置预留图片的src属性
+            document.getElementById('submenu-image-right').src = imageSrc;
+            // 记录用户对糖度的选择
+            sugarChoice = sugar;
+            // 设置当前糖度按钮为选中状态
+            event.target.classList.add('selected');
+            // 移除所有其他糖度按钮的选中状态
+            var sugarButtons = document.querySelectorAll('.sugar-button');
+            sugarButtons.forEach(function(btn) {
+                if (btn !== event.target && !btn.classList.contains('ice-button') && !btn.classList.contains('cup-button')) {
+                    btn.classList.remove('selected');
+                }
+            });
+        }
+
+        function selectIce(ice) {
+            // 记录用户对冰度的选择
+            iceChoice = ice;
+            // 设置当前冰度按钮为选中状态
+            event.target.classList.add('selected');
+            // 移除所有其他冰度按钮的选中状态
+            var iceButtons = document.querySelectorAll('.ice-button');
+            iceButtons.forEach(function(btn) {
+                if (btn !== event.target) {
+                    btn.classList.remove('selected');
+                }
+            });
+        }
+
+        function selectCup(cup) {
+            // 记录用户对杯型的选择
+            cupChoice = cup;
+            // 设置当前杯型按钮为选中状态
+            event.target.classList.add('selected');
+            // 移除所有其他杯型按钮的选中状态
+            var cupButtons = document.querySelectorAll('.cup-button');
+            cupButtons.forEach(function(btn) {
+                if (btn !== event.target) {
+                    btn.classList.remove('selected');
+                }
+            });
+        }
+
+        function confirmOrder() {
+            // 确保所有选择都已完成
+            if (sugarChoice !== "" && iceChoice !== "" && cupChoice !== "") {
+                // 获取选择的奶茶名字
+                var selectedDrink = document.getElementById('submenu-title').textContent;
+                var xmlhttp = new XMLHttpRequest();
+                xmlhttp.onreadystatechange = function() {
+                    if (this.readyState == 4 && this.status == 200) {
+                        // 可以在这里添加一些用户反馈逻辑，例如弹窗通知
+                        alert("订单提交成功！");
+                    }
+                };
+                // 将奶茶名字一并发送到后端
+                xmlhttp.open("GET", "save_order.php?sugar=" + encodeURIComponent(sugarChoice) + "&ice=" + encodeURIComponent(iceChoice) + "&cup=" + encodeURIComponent(cupChoice) + "&drink=" + encodeURIComponent(selectedDrink), true);
+                xmlhttp.send();
+            } else {
+                alert("请先选择糖度、冰度和杯型");
+            }
+        }
+    </script>
+ <footer>
+        <div style="text-align:center;">
+            <a href="https://beian.miit.gov.cn" target="_blank">沪ICP备2024065256号</a>
+        </div>
+    </footer>
+</body>
+</html>
