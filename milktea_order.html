@@ -354,6 +354,7 @@
                 // 将奶茶名字一并发送到后端
                 xmlhttp.open("GET", "save_order.php?sugar=" + encodeURIComponent(sugarChoice) + "&ice=" + encodeURIComponent(iceChoice) + "&cup=" + encodeURIComponent(cupChoice) + "&drink=" + encodeURIComponent(selectedDrink), true);
                 xmlhttp.send();
+                alert("订单提交成功！");
             } else {
                 alert("请先选择糖度、冰度和杯型");
             }
